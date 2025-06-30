@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- SEO & Metadata -->
+    <meta charset="UTF-8">
+    <title>Image to CSS Pixel Art Generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Instantly convert any image into pure CSS pixel art. Upload a picture, adjust resolution and size, and generate clean, copy-pasteable CSS box-shadow code.">
+    <meta name="keywords" content="css pixel art, css art generator, image to css, pixel art generator, css box-shadow art, css art tool, chris pirillo">
+    <meta name="author" content="Chris Pirillo">
+    <link rel="canonical" href="https://pirillo.com/arcade/css-art.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pirillo.com/arcade/css-art.html">
+    <meta property="og:title" content="Image to CSS Pixel Art Generator">
+    <meta property="og:description" content="Instantly convert any image into pure CSS pixel art. Upload a picture, adjust resolution and size, and generate clean, copy-pasteable CSS box-shadow code.">
+    <meta property="og:image" content="https://pirillo.com/arcade/images/css-art.png">
+    <meta property="og:image:width" content="839">
+    <meta property="og:image:height" content="612">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://pirillo.com/arcade/css-art.html">
+    <meta property="twitter:title" content="Image to CSS Pixel Art Generator">
+    <meta property="twitter:description" content="Instantly convert any image into pure CSS pixel art. Upload a picture, adjust resolution and size, and generate clean, copy-pasteable CSS box-shadow code.">
+    <meta property="twitter:image" content="https://pirillo.com/arcade/images/css-art.png">
+    <meta name="twitter:creator" content="@ChrisPirillo">
+    <meta name="twitter:site" content="@ChrisPirillo">
+
+    <!-- Performance & Resource Hints -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"></noscript>
+
+    <!-- Critical Scripts & Styles -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1CQ4D3VQ3L"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-1CQ4D3VQ3L');
+    </script>
+    
+    <!-- Inlined Critical CSS -->
+    <style>
+        html, body { height: 100%; }
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #e5e7eb; /* gray-200 */
+            background-color: #030712; /* Fallback background */
+        }
+
+        .aurora-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none; /* Make sure it doesn't intercept clicks */
+        }
+
+        .aurora-dot {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.6;
+        }
+
+        .dot1 {
+            width: 45vmax; height: 45vmax;
+            background: #4f46e5; /* Indigo */
+            animation: moveDot1 18s cubic-bezier(0.25, 1, 0.5, 1) infinite alternate;
+        }
+
+        .dot2 {
+            width: 55vmax; height: 55vmax;
+            background: #d946ef; /* Fuchsia */
+            animation: moveDot2 22s cubic-bezier(0.25, 1, 0.5, 1) infinite alternate;
+        }
+        
+        .dot3 {
+            width: 40vmax; height: 40vmax;
+            background: #14b8a6; /* Teal */
+            animation: moveDot3 20s cubic-bezier(0.25, 1, 0.5, 1) infinite alternate;
+        }
+
+        @keyframes moveDot1 {
+            0%   { transform: translate(10vw, -10vh) scale(1); }
+            100% { transform: translate(-15vw, 15vh) scale(0.8); }
+        }
+        @keyframes moveDot2 {
+            0%   { transform: translate(-20vw, 20vh) scale(0.9); }
+            100% { transform: translate(20vw, -15vh) scale(1.1); }
+        }
+        @keyframes moveDot3 {
+            0%   { transform: translate(15vw, 20vh) scale(1.2); }
+            100% { transform: translate(-10vw, -25vh) scale(0.9); }
+        }
+
+        .glass-panel {
+            background: rgba(31, 41, 55, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        input[type=range] {
+            -webkit-appearance: none; appearance: none;
+            width: 100%; height: 4px;
+            background: rgba(255,255,255,0.2); border-radius: 2px;
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none;
+            width: 20px; height: 20px;
+            background: #f9fafb; cursor: pointer; border-radius: 50%;
+            border: 2px solid #06b6d4;
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.5);
+            transition: box-shadow 0.2s;
+        }
+        
+        .preview-grid {
+            background-image:
+                linear-gradient(to right, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        .pixel-art { position: relative; image-rendering: pixelated; }
+        .pixel-art-shadow { position: absolute; top: 0; left: 0; width: 1em; height: 1em; }
+
+        .btn-3d {
+            transition: all 0.1s ease-out;
+            box-shadow: 0 4px 0 #0e7490;
+            background-image: linear-gradient(to top, #06b6d4, #22d3ee);
+        }
+        .btn-3d:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #0e7490;
+            filter: brightness(1.1);
+        }
+        .btn-3d:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #0e7490;
+        }
+
+        .btn-3d-green {
+             box-shadow: 0 4px 0 #166534;
+             background-image: linear-gradient(to top, #16a34a, #22c55e);
+        }
+        .btn-3d-green:hover { box-shadow: 0 6px 0 #166534; }
+        .btn-3d-green:active { box-shadow: 0 1px 0 #166534; }
+        .btn-3d-green:disabled {
+            background-image: linear-gradient(to top, #4b5563, #6b7280);
+            box-shadow: 0 4px 0 #374151;
+            cursor: not-allowed;
+            filter: brightness(0.8);
+        }
+        .btn-3d-green:disabled:hover { transform: none; }
+
+        #drag-overlay {
+            border: 4px dashed #06b6d4;
+            transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+        }
+    </style>
+    
+    <script type="application/ld+json">
+    /* JSON-LD Structured Data (unchanged) */
+    </script>
+</head>
+<body class="select-none">
+    
+    <div class="aurora-container" aria-hidden="true">
+        <div class="aurora-dot dot1"></div>
+        <div class="aurora-dot dot2"></div>
+        <div class="aurora-dot dot3"></div>
+    </div>
+    
+    <div class="h-full w-full p-4 md:p-6 lg:p-8 flex flex-col relative z-10">
+        
+        <div class="w-full max-w-screen-xl mx-auto flex flex-col flex-grow">
+            <!-- Header Section -->
+            <header class="text-center mb-8 flex-shrink-0">
+                <h1 class="text-3xl md:text-4xl font-bold text-white" style="text-shadow: 0 0 10px rgba(255,255,255,0.3);">Image to CSS Pixel Art Generator</h1>
+                <p class="text-md text-gray-300 mt-2">Crafting pure CSS pixel art with style.</p>
+            </header>
+
+            <div id="start-view" class="flex-grow flex items-center justify-center">
+                 <label for="imageLoader" class="text-center cursor-pointer text-white font-bold py-4 px-8 text-xl rounded-lg inline-block btn-3d">
+                    Upload Image
+                </label>
+            </div>
+
+            <!-- [MODIFIED] App View now has responsive height and layout -->
+            <div id="app-view" class="hidden flex-grow flex flex-col">
+                <main id="main-grid" class="flex-grow grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+                    
+                    <section class="lg:col-span-1 glass-panel rounded-xl p-6 self-start" aria-labelledby="controls-heading">
+                        <h2 id="controls-heading" class="sr-only">Controls</h2>
+                        <div class="space-y-6">
+                            <div class="grid grid-cols-2 gap-4">
+                                <label for="imageLoader" class="text-center cursor-pointer text-white font-bold py-3 px-4 rounded-lg inline-block btn-3d">
+                                    Upload New
+                                </label>
+                                <div>
+                                    <button id="copyButton" class="w-full text-white font-bold py-3 px-4 rounded-lg btn-3d btn-3d-green" disabled>
+                                        Copy CSS
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="space-y-6 md:grid md:grid-cols-2 md:gap-x-8 md:space-y-0 pt-4">
+                                <div>
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label for="resolutionSlider" class="font-medium text-gray-300">Resolution</label>
+                                        <span id="resolutionValue" class="text-sm font-mono bg-black/30 px-2 py-1 rounded">30</span>
+                                    </div>
+                                    <input id="resolutionSlider" type="range" min="1" max="100" value="30" class="w-full">
+                                </div>
+                                 <div>
+                                    <div class="flex justify-between items-center mb-2">
+                                        <label for="sizeSlider" class="font-medium text-gray-300">Size</label>
+                                        <span id="sizeValue" class="text-sm font-mono bg-black/30 px-2 py-1 rounded">400px</span>
+                                    </div>
+                                    <input id="sizeSlider" type="range" min="100" max="800" value="400" step="10" class="w-full">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- [MODIFIED] Preview panel has fixed height on mobile/tablet -->
+                    <section id="preview-panel" class="lg:col-span-2 glass-panel rounded-xl p-4 flex items-center justify-center preview-grid min-h-[400px] lg:min-h-0">
+                        <h2 id="preview-heading" class="sr-only">Preview Area</h2>
+                        <div id="loader" class="hidden" role="status" aria-label="Loading">
+                            <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-cyan-400"></div>
+                        </div>
+                        <div id="preview-container" class="w-full h-full flex items-center justify-center overflow-hidden"></div>
+                    </section>
+                </main>
+                
+                <footer class="text-center mt-8 text-sm text-gray-400 flex-shrink-0">
+                    <p>A tool by <a href="https://pirillo.com/" class="underline hover:text-cyan-400">Chris Pirillo</a>. All rights reserved.</p>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <div id="drag-overlay" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 pointer-events-none opacity-0 visibility-hidden">
+        <div class="text-center text-white p-8 rounded-lg">
+            <svg class="mx-auto h-24 w-24 text-cyan-300" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <p class="mt-4 text-3xl font-bold">Drop Image Here</p>
+        </div>
+    </div>
+
+    <input type="file" id="imageLoader" accept="image/*" class="hidden">
+    <canvas id="canvas" class="hidden" aria-hidden="true"></canvas>
+
+    <script>
+        // DOM element references
+        const imageLoader = document.getElementById('imageLoader');
+        const resolutionSlider = document.getElementById('resolutionSlider');
+        const resolutionValue = document.getElementById('resolutionValue');
+        const sizeSlider = document.getElementById('sizeSlider');
+        const sizeValue = document.getElementById('sizeValue');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        const previewContainer = document.getElementById('preview-container');
+        const loader = document.getElementById('loader');
+        const copyButton = document.getElementById('copyButton');
+        const startView = document.getElementById('start-view');
+        const appView = document.getElementById('app-view');
+        const dragOverlay = document.getElementById('drag-overlay');
+        
+        let loadedImage = null;
+        let generatedCssPayload = null;
+        let debounceTimeout;
+
+        // --- Event Listeners ---
+        imageLoader.addEventListener('change', handleImageUpload);
+        resolutionSlider.addEventListener('input', handleControlChange);
+        sizeSlider.addEventListener('input', handleControlChange);
+        copyButton.addEventListener('click', copyCssToClipboard);
+
+        // --- Drag and Drop Listeners ---
+        window.addEventListener('dragenter', handleDragEnter);
+        dragOverlay.addEventListener('dragleave', handleDragLeave);
+        dragOverlay.addEventListener('dragover', (e) => e.preventDefault());
+        dragOverlay.addEventListener('drop', handleDrop);
+
+        function handleDragEnter(e) {
+            e.preventDefault();
+            dragOverlay.classList.remove('hidden', 'opacity-0', 'visibility-hidden');
+            dragOverlay.classList.add('pointer-events-auto');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            if (e.target === dragOverlay) {
+                dragOverlay.classList.add('hidden', 'opacity-0', 'visibility-hidden');
+                dragOverlay.classList.remove('pointer-events-auto');
+            }
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            dragOverlay.classList.add('hidden', 'opacity-0', 'visibility-hidden');
+            dragOverlay.classList.remove('pointer-events-auto');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                processFile(files[0]);
+            }
+        }
+
+        // --- Event Handlers ---
+        function handleImageUpload(e) {
+            if (e.target.files.length > 0) {
+                processFile(e.target.files[0]);
+            }
+        }
+
+        function processFile(file) {
+             if (!file || !file.type.startsWith('image/')) {
+                console.error("Invalid file type. Please upload an image.");
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                loadedImage = new Image();
+                loadedImage.onload = () => {
+                    startView.classList.add('hidden');
+                    appView.classList.remove('hidden');
+                    generatePixelArt();
+                };
+                loadedImage.onerror = () => {
+                    alert('Error loading image. Please try another file.');
+                    showLoading(false);
+                };
+                loadedImage.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        function handleControlChange(e) {
+            if (e.target.id === 'resolutionSlider') resolutionValue.textContent = e.target.value;
+            if (e.target.id === 'sizeSlider') sizeValue.textContent = `${e.target.value}px`;
+            if (loadedImage) {
+                clearTimeout(debounceTimeout);
+                debounceTimeout = setTimeout(() => generatePixelArt(), 200);
+            }
+        }
+        
+        function copyCssToClipboard() {
+            if (!generatedCssPayload) return;
+            const { boxShadow, topLeftColor, width, height, fontSize } = generatedCssPayload;
+            const displayWidth = sizeSlider.value;
+            const cssString =
+`/* To make the artwork ${displayWidth}px wide, use: */
+.pixel-art-container { font-size: ${fontSize.toFixed(4)}px; }
+.pixel-art { position: relative; width: ${width}em; height: ${height}em; }
+.pixel-art::before { content: ''; position: absolute; top: 0; left: 0; width: 1em; height: 1em; background: ${topLeftColor}; box-shadow: ${boxShadow}; }`;
+            try {
+                const tempTextArea = document.createElement('textarea'); tempTextArea.value = cssString.trim();
+                document.body.appendChild(tempTextArea); tempTextArea.select(); document.execCommand('copy'); document.body.removeChild(tempTextArea);
+                const originalText = copyButton.textContent; copyButton.textContent = 'Copied!'; setTimeout(() => { copyButton.textContent = originalText; }, 2000);
+            } catch (err) { console.error('Failed to copy CSS: ', err); }
+        }
+
+        function generatePixelArt() {
+            if (!loadedImage) return;
+            showLoading(true);
+            setTimeout(() => {
+                const resolution = parseInt(resolutionSlider.value, 10);
+                const maxProcessDimension = 600; 
+                let w = loadedImage.width, h = loadedImage.height;
+                if (w > h) { if (w > maxProcessDimension) { h = Math.round(h * (maxProcessDimension / w)); w = maxProcessDimension; }
+                } else { if (h > maxProcessDimension) { w = Math.round(w * (maxProcessDimension / h)); h = maxProcessDimension; } }
+                canvas.width = w; canvas.height = h;
+                ctx.drawImage(loadedImage, 0, 0, w, h);
+                let topLeftColor = 'transparent'; const boxShadows = [];
+                const artWidthInEms = Math.round(w / resolution); const artHeightInEms = Math.round(h / resolution);
+                for (let y = 0; y < h; y += resolution) {
+                    for (let x = 0; x < w; x += resolution) {
+                        const pixelData = ctx.getImageData(x, y, 1, 1).data; const alpha = pixelData[3] / 255;
+                        if (alpha > 0.1) {
+                             const r = pixelData[0], g = pixelData[1], b = pixelData[2];
+                             const colorString = `rgba(${r},${g},${b},${alpha.toFixed(2)})`;
+                             const xOffset = Math.round(x / resolution); const yOffset = Math.round(y / resolution);
+                             if (xOffset === 0 && yOffset === 0) { topLeftColor = colorString; } else { boxShadows.push(`${xOffset}em ${yOffset}em ${colorString}`); }
+                        }
+                    }
+                }
+                const finalBoxShadow = boxShadows.join(',\n    ');
+                showLoading(false);
+                updatePreviewAndStoreCss(finalBoxShadow, topLeftColor, artWidthInEms, artHeightInEms);
+            }, 50);
+        }
+
+        function showLoading(isLoading) {
+            previewContainer.classList.toggle('hidden', isLoading);
+            loader.classList.toggle('hidden', !isLoading);
+        }
+        function updatePreviewAndStoreCss(boxShadow, topLeftColor, width, height) {
+            const outputPixelWidth = parseInt(sizeSlider.value, 10);
+            const fontSizeForCss = width > 0 ? outputPixelWidth / width : 0;
+            const containerW = previewContainer.clientWidth; const containerH = previewContainer.clientHeight;
+            let fontSizeForPreview = fontSizeForCss;
+            if (width > 0 && height > 0) {
+                const artW = width * fontSizeForCss; const artH = height * fontSizeForCss;
+                if (artW > containerW || artH > containerH) {
+                    const scale = Math.min(containerW / artW, containerH / artH);
+                    fontSizeForPreview = fontSizeForCss * scale * 0.95;
+                }
+            }
+            previewContainer.innerHTML = '';
+            const artElementContainer = document.createElement('div');
+            artElementContainer.className = 'pixel-art';
+            artElementContainer.style.width = `${width}em`; artElementContainer.style.height = `${height}em`;
+            artElementContainer.style.fontSize = `${fontSizeForPreview.toFixed(4)}px`;
+            const shadowElement = document.createElement('div');
+            shadowElement.className = 'pixel-art-shadow'; shadowElement.style.backgroundColor = topLeftColor; shadowElement.style.boxShadow = boxShadow;
+            artElementContainer.appendChild(shadowElement); previewContainer.appendChild(artElementContainer);
+            generatedCssPayload = { boxShadow, topLeftColor, width, height, fontSize: fontSizeForCss };
+            copyButton.disabled = false;
+        }
+    
+        // --- Initial State Setup ---
+        resolutionValue.textContent = resolutionSlider.value;
+        sizeValue.textContent = `${sizeSlider.value}px`;
+    </script>
+</body>
+</html>
